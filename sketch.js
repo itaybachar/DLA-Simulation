@@ -1,19 +1,21 @@
 let grid;
 let seed;
-let GRID_COUNT = 200;
+let GRID_COUNT = 400;
 let CELL_SIZE = 1;
 let initialBoundary = 10;
 let fr = 100;
 
 let quadrentPoints;
 
-function setup() {
+function setup()
+{
     frameRate(fr); // Attempt to refresh at starting FPS
     createCanvas(GRID_COUNT * CELL_SIZE, GRID_COUNT * CELL_SIZE);
     setupSimulation();
 }
 
-function setupSimulation() {
+function setupSimulation()
+{
     grid = new GridDomain(GRID_COUNT, width / GRID_COUNT, initialBoundary);
 
     seed = new Seed(0, 0, grid)
@@ -23,33 +25,42 @@ function setupSimulation() {
     grid.display();
 }
 
-function draw() {
+function draw()
+{
     walkCircle();
 }
 
-function walkCircle() {
+function walkCircle()
+{
     walkQuadrants(quadrentPoints, seed)
 }
 
-class GridDomain {
-    constructor(divisions, scale, boundaryRadius = 0) {
+class GridDomain
+{
+    constructor(divisions, scale, boundaryRadius = 0)
+    {
         this.rows = divisions;
         this.cols = divisions;
         this.scale = scale;
         this.boundaryRadius = boundaryRadius;
     }
 
-    getOrigin() {
+    getOrigin()
+    {
         return [this.cols / 2, this.rows / 2]
     }
 
-    getOriginScreen() {
+    getOriginScreen()
+    {
         return [this.cols * this.scale / 2, this.rows * this.scale / 2]
     }
 
-    display() {
-        for (var x = 0; x <= this.cols; x++) {
-            for (var y = 0; y <= this.rows; y++) {
+    display()
+    {
+        for (var x = 0; x <= this.cols; x++)
+        {
+            for (var y = 0; y <= this.rows; y++)
+            {
                 stroke(color('grey'))
                 strokeWeight(1);
                 // stroke(1);
@@ -61,8 +72,10 @@ class GridDomain {
         this.displayBoundary();
     }
 
-    displayBoundary() {
-        if (this.boundaryRadius > 0) {
+    displayBoundary()
+    {
+        if (this.boundaryRadius > 0)
+        {
             let origin = this.getOriginScreen();
             stroke(color("grey"))
             noFill();
@@ -72,8 +85,10 @@ class GridDomain {
     }
 }
 
-class Seed {
-    constructor(x, y, grid) {
+class Seed
+{
+    constructor(x, y, grid)
+    {
         this.x = x;
         this.y = y;
         this.grid = grid;
@@ -82,14 +97,17 @@ class Seed {
         this.walkerWidth = 7;
     }
 
-    stick(x, y) {
+    stick(x, y)
+    {
         //Is outside of bounds
-        if (getDistance(this.x, this.y, x, y) > this.grid.boundaryRadius) {
+        if (getDistance(this.x, this.y, x, y) > this.grid.boundaryRadius)
+        {
             return 2;
         }
 
         //Is on seed/growth
-        if (this.walkers.has([x, y])) {
+        if (this.walkers.has([x, y]))
+        {
             return -1;
         }
 
@@ -97,14 +115,17 @@ class Seed {
         if (this.walkers.has([x + 1, y]) ||
             this.walkers.has([x, y + 1]) ||
             this.walkers.has([x - 1, y]) ||
-            this.walkers.has([x, y - 1])) {
+            this.walkers.has([x, y - 1]))
+        {
             //Has possible stick
-            if (stuckToSeed()) {
+            if (stuckToSeed())
+            {
                 let org = grid.getOrigin();
                 this.walkers.add([x, y]);
                 // console.log(getDistance(x, y, 0, 0))
                 if (this.grid.boundaryRadius < GRID_COUNT / 2 &&
-                    getDistance(x, y, 0, 0) >= 0.9 * this.grid.boundaryRadius) {
+                    getDistance(x, y, 0, 0) >= 0.9 * this.grid.boundaryRadius)
+                {
                     //Update Size
                     this.grid.boundaryRadius += 2;
                     quadrentPoints = getClosestPoints(this.grid.boundaryRadius, 1);
@@ -115,7 +136,8 @@ class Seed {
                 }
 
                 //Restart Simulation
-                if (getDistance(this.x, this.y, x, y) >= this.grid.boundaryRadius * .98) {
+                if (getDistance(this.x, this.y, x, y) >= this.grid.boundaryRadius * .98)
+                {
                     // setupSimulation();
                     noLoop();
                 }
@@ -124,7 +146,8 @@ class Seed {
                 strokeWeight(CELL_SIZE);
                 point((x + org[0]) * this.grid.scale, (-y + org[1]) * this.grid.scale)
                 return 1;
-            } else {
+            } else
+            {
                 return -1;
             }
         }
@@ -133,12 +156,14 @@ class Seed {
         return 0;
     }
 
-    add(x, y) {
+    add(x, y)
+    {
         let org = grid.getOrigin();
         this.walkers.add([x, y]);
         // console.log(getDistance(x, y, 0, 0))
         if (this.grid.boundaryRadius < GRID_COUNT / 2 &&
-            getDistance(x, y, 0, 0) >= 0.9 * this.grid.boundaryRadius) {
+            getDistance(x, y, 0, 0) >= 0.9 * this.grid.boundaryRadius)
+        {
             //Update Size
             this.grid.boundaryRadius += 2;
             quadrentPoints = getClosestPoints(this.grid.boundaryRadius, 1);
@@ -149,7 +174,8 @@ class Seed {
         }
 
         //Restart Simulation
-        if (getDistance(this.x, this.y, x, y) >= this.grid.boundaryRadius * .98) {
+        if (getDistance(this.x, this.y, x, y) >= this.grid.boundaryRadius * .98)
+        {
             // setupSimulation();
             noLoop();
         }
@@ -159,10 +185,13 @@ class Seed {
         point((x + org[0]) * this.grid.scale, (-y + org[1]) * this.grid.scale)
     }
 
-    display() {
+    display()
+    {
         let org = grid.getOrigin();
-        this.walkers.data.forEach((ys, x) => {
-            ys.forEach(y => {
+        this.walkers.data.forEach((ys, x) =>
+        {
+            ys.forEach(y =>
+            {
                 if (x == this.x && y == this.y)
                     stroke("red");
                 else
@@ -174,15 +203,18 @@ class Seed {
         });
     }
 
-    has(x, y) {
+    has(x, y)
+    {
         return this.walkers.has([x, y])
     }
 }
 
-function getDistance(x1, y1, x2, y2) {
+function getDistance(x1, y1, x2, y2)
+{
     return Math.hypot(x2 - x1, y2 - y1);
 }
 
-function stuckToSeed() {
+function stuckToSeed()
+{
     return true;
 }
