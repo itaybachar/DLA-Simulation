@@ -129,7 +129,6 @@ function walk(x, y, seed)
             break;
         }
     }
-    return seed;
 }
 
 function getSurroundingNeighbors(x, y, seed)
@@ -191,7 +190,7 @@ function walkQuadrants(quad1, seed)
     {
         x = -1 * quad1[i].x;
         y = -1 * quad1[i].y;
-        seed = walk(x, y, seed);
+        walk(x, y, seed);
         // return;
     }
     //quad4
@@ -199,20 +198,20 @@ function walkQuadrants(quad1, seed)
     {
         x = -1 * quad1[i].x;
         y = quad1[i].y;
-        seed = walk(x, y, seed);
+        walk(x, y, seed);
     }
     //quad1
     for (i = 0; i < quad1.length - 1; i++)
     {
         x = quad1[i].x;
         y = quad1[i].y;
-        seed = walk(x, y, seed);
+        walk(x, y, seed);
     }
     //quad 2
     for (i = quad1.length - 1; i > 0; i--)
     {
         x = quad1[i].x;
         y = -1 * quad1[i].y;
-        seed = walk(x, y, seed);
+        walk(x, y, seed);
     }
 }

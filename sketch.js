@@ -3,7 +3,7 @@ let seed;
 let GRID_COUNT = 100;
 let CELL_SIZE = 5;
 let initialBoundary = 10;
-let fr = 1;
+let fr = 10;
 
 let quadrentPoints;
 
@@ -166,36 +166,6 @@ class Seed
         //No where to stick to or did not stick
         return 0;
     }
-
-    add(x, y)
-    {
-        let org = grid.getOrigin();
-        this.walkers.add([x, y]);
-        // console.log(getDistance(x, y, 0, 0))
-        if (this.grid.boundaryRadius < GRID_COUNT / 2 &&
-            getDistance(x, y, 0, 0) >= 0.9 * this.grid.boundaryRadius)
-        {
-            //Update Size
-            this.grid.boundaryRadius += 2;
-            quadrentPoints = getClosestPoints(this.grid.boundaryRadius, 1);
-
-            clear();
-            this.grid.displayBoundary();
-            this.display();
-        }
-
-        //Restart Simulation
-        if (getDistance(this.x, this.y, x, y) >= this.grid.boundaryRadius * .98)
-        {
-            // setupSimulation();
-            noLoop();
-        }
-
-        stroke("green")
-        strokeWeight(CELL_SIZE);
-        point((x + org[0]) * this.grid.scale, (-y + org[1]) * this.grid.scale)
-    }
-
     display()
     {
         let org = grid.getOrigin();
