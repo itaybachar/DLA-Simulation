@@ -110,6 +110,7 @@ function walk(x, y, seed)
         {
             y = y + 1;
         }
+
         stickOutput = seed.stick(x, y)
 
         if (stickOutput == 2)
@@ -131,37 +132,53 @@ function walk(x, y, seed)
     return seed;
 }
 
-function getSurroundingBitmap(x, y, seed)
+function getSurroundingNeighbors(x, y, seed)
 {
-    bitmap = 0;
+    edge = 0;
+    diagonal = 0;
     if (seed.has(x + 1, y))
-        bitmap |= 0b0001;
+        edge++;
+    // bitmap |= 0b0001;
     if (seed.has(x - 1, y))
-        bitmap |= 0b0010;
+        edge++;
+    // bitmap |= 0b0010;
     if (seed.has(x, y + 1))
-        bitmap |= 0b0100;
+        edge++;
+    // bitmap |= 0b0100;
     if (seed.has(x, y - 1))
-        bitmap |= 0b1000;
-    return bitmap;
+        edge++;
+    // // bitmap |= 0b1000;
+    // if (seed.has(x + 1, y + 1))
+    //     diagonal++;
+    // if (seed.has(x - 1, y + 1))
+    //     diagonal++
+    // if (seed.has(x - 1, y - 1))
+    //     diagonal++
+    // if (seed.has(x + 1, y - 1))
+    //     diagonal++;
+    //Diagonals
+    return [edge, diagonal];
 }
 
-function hasHoles(x, y, bitmap, seed)
+function hasHoles(x, y, seed)
 {
     //go around the point(3 by 3) and find all the "flips"
     deltax = [0, -1, -1, -1, 0, 1, 1, 1]
     deltay = [1, 1, 0, -1, -1, -1, 0, 1]
 
     flipCount = 0;
-    prevCon = curCon = seed.has(x + deltax[0], y + deltay[0]);
-    for (i = 1; i < 8; i++)
+    prevCon = curCon = seed.has(x + 1, y + 1);
+    for (let index = 0; index < 8; index++)
     {
-        curCon = seed.has(x + deltax[i], y + deltay[i]);
+        curCon = seed.has(x + deltax[index], y + deltay[index]);
         if (prevCon != curCon)
+        {
             flipCount++;
+        }
         prevCon = curCon;
     }
     //Get points around  potential stick in a clockwise manner
-    return flipCount > 2;
+    return flipCount > 3;
 }
 
 function walkQuadrants(quad1, seed)

@@ -1,9 +1,9 @@
 let grid;
 let seed;
-let GRID_COUNT = 400;
-let CELL_SIZE = 1;
+let GRID_COUNT = 100;
+let CELL_SIZE = 5;
 let initialBoundary = 10;
-let fr = 100;
+let fr = 1;
 
 let quadrentPoints;
 
@@ -64,8 +64,8 @@ class GridDomain
                 stroke(color('grey'))
                 strokeWeight(1);
                 // stroke(1);
-                // line(x * this.scale, 0, x * this.scale, this.rows * this.scale);
-                // line(0, y * this.scale, this.cols * this.scale, y * this.scale);
+                line(x * this.scale, 0, x * this.scale, this.rows * this.scale);
+                line(0, y * this.scale, this.cols * this.scale, y * this.scale);
             }
         }
 
@@ -97,6 +97,10 @@ class Seed
         this.walkerWidth = 7;
     }
 
+    // 1 - walker stuck!
+    // 0 - no interaction, keep walking
+    // -1 - walked ontop of growth, backtrack
+    // 2 - outside of boundary, restart walker.
     stick(x, y)
     {
         //Is outside of bounds
@@ -117,6 +121,13 @@ class Seed
             this.walkers.has([x - 1, y]) ||
             this.walkers.has([x, y - 1]))
         {
+
+            let [edgeCount, diagonalCount] = getSurroundingNeighbors(x, y, seed);
+            if (edgeCount > 0 && hasHoles(x, y, seed))
+            {
+                return 0;
+            }
+
             //Has possible stick
             if (stuckToSeed())
             {
