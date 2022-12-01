@@ -1,9 +1,11 @@
 let grid;
 let seed;
-let GRID_COUNT = 100;
-let CELL_SIZE = 5;
+let GRID_COUNT = 200;
+let CELL_SIZE = 2;
 let initialBoundary = 10;
-let fr = 10;
+let fr = 1;
+
+let simulating = false;
 
 let quadrentPoints;
 
@@ -11,7 +13,6 @@ function setup()
 {
     frameRate(fr); // Attempt to refresh at starting FPS
     createCanvas(GRID_COUNT * CELL_SIZE, GRID_COUNT * CELL_SIZE);
-    setupSimulation();
 }
 
 function setupSimulation()
@@ -23,11 +24,13 @@ function setupSimulation()
 
     quadrentPoints = getClosestPoints(grid.boundaryRadius, 1);
     grid.display();
+    noLoop();
 }
 
 function draw()
 {
-    walkCircle();
+    if (simulating)
+        walkCircle();
 }
 
 function walkCircle()
@@ -64,8 +67,8 @@ class GridDomain
                 stroke(color('grey'))
                 strokeWeight(1);
                 // stroke(1);
-                line(x * this.scale, 0, x * this.scale, this.rows * this.scale);
-                line(0, y * this.scale, this.cols * this.scale, y * this.scale);
+                // line(x * this.scale, 0, x * this.scale, this.rows * this.scale);
+                // line(0, y * this.scale, this.cols * this.scale, y * this.scale);
             }
         }
 
@@ -125,6 +128,7 @@ class Seed
             let [edgeCount, diagonalCount] = getSurroundingNeighbors(x, y, seed);
             if (edgeCount > 0 && hasHoles(x, y, seed))
             {
+                //Keep walking to avoid new hole.
                 return 0;
             }
 
@@ -149,7 +153,8 @@ class Seed
                 //Restart Simulation
                 if (getDistance(this.x, this.y, x, y) >= this.grid.boundaryRadius * .98)
                 {
-                    // setupSimulation();
+                    simulating = false;
+                    document.getElementById('toggle-btn').disabled = true;
                     noLoop();
                 }
 
@@ -166,6 +171,7 @@ class Seed
         //No where to stick to or did not stick
         return 0;
     }
+
     display()
     {
         let org = grid.getOrigin();
@@ -198,4 +204,54 @@ function getDistance(x1, y1, x2, y2)
 function stuckToSeed()
 {
     return true;
+}
+
+//Button Functions
+function startSimulation()
+{
+    simulating = true;
+    setupSimulation();
+    loop();
+
+    document.getElementById('start-btn').disabled = true;
+    document.getElementById('toggle-btn').disabled = false;
+    document.getElementById('reset-btn').disabled = false;
+}
+
+function toggleSimulation()
+{
+    button = document.getElementById('toggle-btn')
+    val = button.value;
+
+    if (val == 1)
+    {
+        button.value = 0;
+        button.innerText = 'Resume Simulation'
+        simulating = false;
+        noLoop();
+    } else
+    {
+        button.value = 1;
+        button.innerText = 'Pause Simulation'
+        simulating = true;
+        loop();
+    }
+}
+
+function restartSimulation()
+{
+    clear();
+    simulating = false;
+    document.getElementById('start-btn').disabled = false;
+    document.getElementById('toggle-btn').disabled = true;
+    document.getElementById('reset-btn').disabled = true;
+}
+
+function updateSpeed()
+{
+    newFr = document.getElementById('fr').value;
+    document.getElementById('speed').innerText = 'Speed: ' + newFr;
+
+    console.log(newFr)
+    frameRate(parseInt(newFr))
 }
