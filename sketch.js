@@ -1,9 +1,9 @@
 let grid;
 let seed;
 let GRID_COUNT = 200;
-let CELL_SIZE = 2;
+let CELL_SIZE = 5;
 let initialBoundary = 10;
-let fr = 1;
+let fr = 300;
 
 let simulating = false;
 
@@ -13,28 +13,41 @@ let A;
 let B;
 let L;
 
-function setParams()
-{
-    if (document.getElementById("A").value != "") { A = document.getElementById("A").value; }
-    else { A = 1.0; }
-
-    if (document.getElementById("B").value != "") { B = document.getElementById("B").value; }
-    else { B = 0.8; }
-
-    if (document.getElementById("L").value != "") { L = document.getElementById("L").value; }
-    else { L = 9.0; }
-}
 function resetParams()
 {
     A = 1.0;
     B = 0.5;
     L = 9.0;
+
+    document.getElementById('A').value = A;
+    document.getElementById('B').value = B;
+    document.getElementById('L').value = L;
+}
+
+function changeParameters(event, id)
+{
+    switch (id)
+    {
+        case 'A':
+            A = parseFloat(event.value);
+            break;
+        case 'B':
+            B = parseFloat(event.value);
+            break;
+        case 'L':
+            L = parseFloat(event.value);
+            break;
+    }
+
+    // console.log(A, B, L)
 }
 
 function setup()
 {
+    resetParams();
     frameRate(fr); // Attempt to refresh at starting FPS
     createCanvas(GRID_COUNT * CELL_SIZE, GRID_COUNT * CELL_SIZE);
+    rectMode(RADIUS);
 }
 
 function setupSimulation()
@@ -51,6 +64,7 @@ function setupSimulation()
 
 function draw()
 {
+
     if (simulating)
         walkCircle();
 }
@@ -180,9 +194,11 @@ class Seed
                     noLoop();
                 }
 
-                stroke("green")
-                strokeWeight(CELL_SIZE);
-                point((x + org[0]) * this.grid.scale, (-y + org[1]) * this.grid.scale)
+                // stroke("green")
+                fill("green")
+                // strokeWeight(CELL_SIZE);
+                // point((x + org[0]) * this.grid.scale, (-y + org[1]) * this.grid.scale)
+                square((x + org[0]) * this.grid.scale, (-y + org[1]) * this.grid.scale, CELL_SIZE / 2);
                 return 1;
             } else
             {
@@ -202,12 +218,13 @@ class Seed
             ys.forEach(y =>
             {
                 if (x == this.x && y == this.y)
-                    stroke("red");
+                    fill("red");
                 else
-                    stroke("green")
+                    fill("green")
 
-                strokeWeight(CELL_SIZE);
-                point((x + org[0]) * this.grid.scale, (-y + org[1]) * this.grid.scale)
+                strokeWeight(0);
+                // point((x + org[0]) * this.grid.scale, (-y + org[1]) * this.grid.scale)
+                square((x + org[0]) * this.grid.scale, (-y + org[1]) * this.grid.scale, CELL_SIZE / 2)
             })
         });
     }
@@ -228,7 +245,7 @@ function stuckToSeed()
     // A = 1.0, B = 0.5, L = 9.0
     // console.log(A, B, L);
     var p = FindProb(seed, x, y, A, B, L);
-    return Math.random() <= p || p >= 1;
+    return Math.random() <= p;
 }
 
 //Button Functions
@@ -275,8 +292,7 @@ function restartSimulation()
 function updateSpeed()
 {
     newFr = document.getElementById('fr').value;
-    document.getElementById('speed').innerText = 'Speed: ' + newFr;
+    document.getElementById('fr_lbl').innerText = 'Speed: ' + newFr;
 
-    console.log(newFr)
     frameRate(parseInt(newFr))
 }

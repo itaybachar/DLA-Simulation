@@ -219,16 +219,12 @@ function walkQuadrants(quad1, seed)
 function FindProb(seed, x, y, A, B, L)
 {
     var Ni = 0;
-    var ySet;
     for (var i = x - 4; i <= x + 4; i++)
     {
         for (var j = y - 4; j <= y + 4; j++)
         {
-            if (seed.walkers.data.has(i))
-            {
-                ySet = seed.walkers.data.get(i);
-                if (ySet.has(j)) { Ni += 1; }
-            }
+            if (seed.walkers.has([x + 1, y]))
+                Ni += 1;
         }
     }
     var C = .01;
