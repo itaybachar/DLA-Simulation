@@ -11,12 +11,33 @@
     <main>
     </main>
     <br>
-    <!-- <input type="range" min="1" max="100" value="50" class="slider" id="myRange"> -->
+
     <div>
-        <label id='speed' for="fr">Speed: 1</label>
-        <input onchange="updateSpeed()" type="range" id="fr" name="fr" min="1" max="40" value="1">
-        <!-- <label for="fr">Volume</label> -->
+        <label id='fr_lbl' for="fr">Speed: 300</label>
+        <input onchange="updateSpeed()" type="range" id="fr" name="fr" min="1" max="300" value="300">
     </div>
+
+    <label>Parameters:</label>
+    <br>
+    <div style="display: grid;">
+        <div>
+            <label for="A">A</label>
+            <input onchange="changeParameters(this,this.id)" id="A" name="A" type="number" placeholder="A" value=1 />
+        </div>
+        <div>
+            <label for="B">B</label>
+            <input onchange="changeParameters(this,this.id)" id="B" name="B" type="number" placeholder="B" value=0.5 />
+        </div>
+        <div>
+            <label for="L">L</label>
+            <input onchange="changeParameters(this,this.id)" id="L" name="L" type="number" placeholder="L" value=9 />
+        </div>
+    </div>
+
+    <label>Default Values: A=1.0, B=0.5, L=9.0</label>
+
+    <br>
+
     <div style="display: inherit">
         <button id='start-btn' onclick="startSimulation()">Start Simulation</button>
         <button id='toggle-btn' value=1 onclick="toggleSimulation()" disabled>Pause Simulation</button>

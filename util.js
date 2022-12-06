@@ -215,3 +215,24 @@ function walkQuadrants(quad1, seed)
         walk(x, y, seed);
     }
 }
+
+function FindProb(seed, x, y, A, B, L)
+{
+    var Ni = 0;
+    for (var i = x - 4; i <= x + 4; i++)
+    {
+        for (var j = y - 4; j <= y + 4; j++)
+        {
+            if (seed.walkers.has([x + 1, y]))
+                Ni += 1;
+        }
+    }
+    var C = .01;
+    var prob = A * (Ni / L / L - (L - 1) / 2 / L) + B; //probability of sticking based on number of 1s inside box
+    if (prob < C)
+    { //if the probability happens to be negative (small curvature) 
+        // set p=C so the code doesnt get stuck
+        prob = C; //to get negatives, you need to make A and B different than 1 and 0.5
+    }
+    return prob;
+}
