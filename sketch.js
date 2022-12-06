@@ -9,6 +9,28 @@ let simulating = false;
 
 let quadrentPoints;
 
+let A;
+let B;
+let L;
+
+function setParams()
+{
+    if (document.getElementById("A").value != "") { A = document.getElementById("A").value; }
+    else { A = 1.0; }
+
+    if (document.getElementById("B").value != "") { B = document.getElementById("B").value; }
+    else { B = 0.8; }
+
+    if (document.getElementById("L").value != "") { L = document.getElementById("L").value; }
+    else { L = 9.0; }
+}
+function resetParams()
+{
+    A = 1.0;
+    B = 0.5;
+    L = 9.0;
+}
+
 function setup()
 {
     frameRate(fr); // Attempt to refresh at starting FPS
@@ -203,7 +225,10 @@ function getDistance(x1, y1, x2, y2)
 
 function stuckToSeed()
 {
-    return true;
+    // A = 1.0, B = 0.5, L = 9.0
+    // console.log(A, B, L);
+    var p = FindProb(seed, x, y, A, B, L);
+    return Math.random() <= p || p >= 1;
 }
 
 //Button Functions
