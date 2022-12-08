@@ -173,6 +173,10 @@ class Seed
             {
                 let org = grid.getOrigin();
                 this.walkers.add([x, y]);
+
+                //Update FractalDim
+                calculateDim(this.walkers.size, getDistance(x, y, 0, 0));
+
                 // console.log(getDistance(x, y, 0, 0))
                 if (this.grid.boundaryRadius < GRID_COUNT / 2 &&
                     getDistance(x, y, 0, 0) >= 0.9 * this.grid.boundaryRadius)

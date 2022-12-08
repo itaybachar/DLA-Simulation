@@ -236,3 +236,16 @@ function FindProb(seed, x, y, A, B, L)
     }
     return prob;
 }
+
+let fractalDim = 0;
+let minContainerRadius = 1;
+function calculateDim(totalWalkerCount, potentialNewRadius)
+{
+    if (potentialNewRadius > minContainerRadius)
+    {
+        minContainerRadius = potentialNewRadius;
+    }
+
+    fractalDim = Math.log(totalWalkerCount) / Math.log(minContainerRadius)
+    document.getElementById('dim').innerText = "Fractal Dimension: " + fractalDim;
+}
